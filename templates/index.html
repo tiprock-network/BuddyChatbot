@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/912e452282.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Open+Sans:wght@700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+</head>
+<body>
+   <div class="chat-container">
+    <div class="chat-text">
+        <i><i class="fa fa-robot"></i> Medibot</i>
+        <p>Welcome to Medibot</p>
+    </div>
+    <br>
+    <div class="chat-input">
+    <form class="chat-input-box">
+        <input type="text" name="msg-input" class="msg-txt" placeholder="Type here...">
+        <button type="submit" class="submit-btn"><i class="fa fa-paper-plane"></i> Send</button>
+    </form>
+    </div>
+   </div>
+
+   <script>
+     let chatform=get('.chat-input-box')
+     let chat_input=get('.msg-txt')
+     let msg_chat=get('.chat-text')
+
+     chatform.addEventListener('submit',event=>{
+        event.preventDefault();
+        const msgTxt=chat_input.value
+        if (!msgTxt) return;
+
+        appendMsg('You',msgTxt,'right')
+        chat_input.value="";
+        response(msgTxt)
+
+     })
+
+     function appendMsg(name,text,align,xdate){
+        curr_time=new Date()
+        newMinutes=`${curr_time.getMinutes()}`;
+        newSec=`${curr_time.getSeconds()}`
+        if(newMinutes.length==1){
+            newMinutes=`0${curr_time.getMinutes()}`
+        }
+        else{
+            newMinutes=curr_time.getMinutes()
+        }
+
+        if(newSec.length==1){
+            newSec=`0${curr_time.getSeconds()}`
+        }
+        else{
+            newSec=curr_time.getSeconds()
+        }
+        xdate=`${curr_time.getHours()}:${newMinutes}:${newSec}`;
+        const msgHTML=`
+        <br>
+        <br>
+        <div class="chat-text ${align}">
+             
+            <i>${name}</i>
+            <p style="font-size:12px; font-style: italic; color: rgb(35, 150, 93);">${xdate}</p>
+            <br>
+            <p>${text}</p>
+        </div>
+        
+        `;
+
+        msg_chat.insertAdjacentHTML('beforeend',msgHTML);
+        msg_chat.scrollTop += 500;
+       
+     }
+       
+     
+    
+
+     function response(rawText){
+       $.get('/get',{msg:rawText}).done((data)=>{
+        
+        const resMessage=data;
+        appendMsg('Medibot',resMessage,'left');
+       })
+     }
+     function get(selector, root=document){
+        return root.querySelector(selector);
+     }
+   </script>
+   
+</body>
+</html>
