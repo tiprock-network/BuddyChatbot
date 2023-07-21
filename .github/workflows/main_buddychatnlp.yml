@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'buddychatnlp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D06D55C319764B6DAD6EFDDD1FBFBD66 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7C137D002F7A4D19A911510F6449C241 }}
